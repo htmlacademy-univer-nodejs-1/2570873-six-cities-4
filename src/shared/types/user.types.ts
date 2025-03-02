@@ -1,4 +1,7 @@
-export type UserType = 'обычный' | 'pro';
+export enum UserType {
+  Basic,
+  Pro
+}
 
 export type User = {
   /** Имя пользователя (обязательное, мин. 1 символ, макс. 15 символов) */
