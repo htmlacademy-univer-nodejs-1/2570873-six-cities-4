@@ -1,10 +1,20 @@
 import dayjs from 'dayjs';
-import { generateRandomBoolean, generateRandomValue, getRandomEnumValue, getRandomEnumValues, getRandomItem } from '../../helpers/index.js';
-import { Amenity, City, HousingType } from '../../types/index.js';
-import { MockServerData } from '../../types/mock-server-data.type.js';
+import {
+  generateRandomBoolean,
+  generateRandomValue,
+  getRandomEnumValue,
+  getRandomEnumValues,
+  getRandomItem,
+} from '../../helpers/index.js';
+import {
+  Amenity,
+  City,
+  HousingType,
+  MockServerData,
+  UserType,
+} from '../../types/index.js';
 import { OfferTsvParser } from './index.js';
 import { OfferGenerator } from './offer-generator.interface.js';
-
 
 const MIN_DAY_OFFSET = 0;
 const MAX_DAY_OFFSET = 14;
@@ -23,6 +33,15 @@ const MAX_GUESTS = 10;
 
 const MIN_COST = 1_000;
 const MAX_COST = 500_000;
+
+const MIN_EMAIL_ID = 0;
+const MAX_EMAIL_ID = 500_000;
+
+const MIN_LATITUDE = 0;
+const MAX_LATITUDE = 90;
+
+const MIN_LONGITUDE = 0;
+const MAX_LONGITUDE = 180;
 
 export class TsvOfferGenerator implements OfferGenerator {
   constructor(private readonly mockData: MockServerData) {}
@@ -45,7 +64,7 @@ export class TsvOfferGenerator implements OfferGenerator {
         `https://six-cities.ru/images/${offerId}/3`,
         `https://six-cities.ru/images/${offerId}/4`,
         `https://six-cities.ru/images/${offerId}/5`,
-        `https://six-cities.ru/images/${offerId}/6`
+        `https://six-cities.ru/images/${offerId}/6`,
       ],
       isPremium: generateRandomBoolean(),
       isFavourite: generateRandomBoolean(),
@@ -55,10 +74,18 @@ export class TsvOfferGenerator implements OfferGenerator {
       guests: generateRandomValue(MIN_GUESTS, MAX_GUESTS),
       price: generateRandomValue(MIN_COST, MAX_COST, 2),
       amenities: getRandomEnumValues(Amenity),
-      authorUrl: `https://six-cities/users/${author}`,
-      latitude: generateRandomValue(0, 90, 6),
-      longitude: generateRandomValue(0, 180, 6),
-      commentsNumber: 0
+      author: {
+        email: `${author}${generateRandomValue(
+          MIN_EMAIL_ID,
+          MAX_EMAIL_ID
+        )}@mail.ru`,
+        name: author,
+        userType: UserType.Basic,
+        avatarUrl: `http://localhost:1111/${author}`,
+      },
+      latitude: generateRandomValue(MIN_LATITUDE, MAX_LATITUDE, 6),
+      longitude: generateRandomValue(MIN_LONGITUDE, MAX_LONGITUDE, 6),
+      commentsNumber: 0,
     };
     const parser = new OfferTsvParser();
 
