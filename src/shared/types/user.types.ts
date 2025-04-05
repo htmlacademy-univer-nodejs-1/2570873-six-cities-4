@@ -1,6 +1,6 @@
 export enum UserType {
   Basic,
-  Pro
+  Pro,
 }
 
 export type User = {
@@ -11,7 +11,7 @@ export type User = {
   /** Аватар пользователя (необязательное, формат .jpg или .png) */
   avatar?: string;
   /** Пароль (обязательное, мин. 6 символов, макс. 12 символов) */
-  password: string;
+  password?: string;
   /** Тип пользователя (обязательное, возможные варианты: 'обычный' или 'pro') */
   userType: UserType;
-}
+};

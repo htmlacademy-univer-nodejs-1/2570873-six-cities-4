@@ -1,11 +1,12 @@
+import { User } from './index.js';
 
-export enum City{
+export enum City {
   Paris = 'Paris',
   Cologne = 'Colonge',
   Brussels = 'Brussels',
   Amsterdam = 'Amsterdam',
   Hamburg = 'Hamburg',
-  Dusseldorf = 'Dusseldorf'
+  Dusseldorf = 'Dusseldorf',
 }
 
 export interface ICoordinates {
@@ -17,7 +18,7 @@ export enum HousingType {
   Apartment = 'apartment',
   House = 'house',
   Room = 'room',
-  Hotel = 'hotel'
+  Hotel = 'hotel',
 }
 
 export enum Amenity {
@@ -27,7 +28,7 @@ export enum Amenity {
   BabySeat = 'Baby seat',
   Washer = 'Washer',
   Towels = 'Towels',
-  Fridge = 'Fridge'
+  Fridge = 'Fridge',
 }
 
 export type Offer = {
@@ -45,8 +46,8 @@ export type Offer = {
   guests: number;
   price: number;
   amenities: Amenity[];
-  authorUrl: string;
+  author: User;
   latitude: number;
   longitude: number;
   commentsNumber: number;
-}
+};
