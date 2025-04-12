@@ -1,17 +1,17 @@
 import dayjs from 'dayjs';
 import {
-    generateRandomBoolean,
-    generateRandomValue,
-    getRandomEnumValue,
-    getRandomEnumValues,
-    getRandomItem,
+  generateRandomBoolean,
+  generateRandomValue,
+  getRandomEnumValue,
+  getRandomEnumValues,
+  getRandomItem,
 } from '../../helpers/index.js';
 import {
-    Amenity,
-    City,
-    HousingType,
-    MockServerData,
-    UserType,
+  City,
+  ConvenienceType,
+  HousingType,
+  MockServerData,
+  UserType,
 } from '../../types/index.js';
 import { OfferTsvParser } from './index.js';
 import { OfferGenerator } from './offer-generator.interface.js';
@@ -51,7 +51,7 @@ export class TsvOfferGenerator implements OfferGenerator {
     const author = getRandomItem(this.mockData.authors);
 
     const offer = {
-      title: getRandomItem(this.mockData.names),
+      name: getRandomItem(this.mockData.names),
       description: getRandomItem(this.mockData.descriptions),
       publicationDate: dayjs()
         .subtract(generateRandomValue(MIN_DAY_OFFSET, MAX_DAY_OFFSET))
@@ -73,7 +73,7 @@ export class TsvOfferGenerator implements OfferGenerator {
       rooms: generateRandomValue(MIN_ROOMS, MAX_ROOMS),
       guests: generateRandomValue(MIN_GUESTS, MAX_GUESTS),
       cost: generateRandomValue(MIN_COST, MAX_COST, 2),
-      amenities: getRandomEnumValues(Amenity),
+      conveniences: getRandomEnumValues(ConvenienceType),
       author: {
         email: `${author}${generateRandomValue(
           MIN_EMAIL_ID,

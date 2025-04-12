@@ -21,7 +21,7 @@ export enum HousingType {
   Hotel = 'hotel',
 }
 
-export enum Amenity {
+export enum ConvenienceType {
   Breakfast = 'Breakfast',
   AirConditioning = 'Air conditioning',
   LaptopFriendlyWorkspace = 'Laptop friendly workspace',
@@ -32,7 +32,7 @@ export enum Amenity {
 }
 
 export type Offer = {
-  title: string;
+  name: string;
   description: string;
   publicationDate: Date;
   city: City;
@@ -45,7 +45,7 @@ export type Offer = {
   rooms: number;
   guests: number;
   cost: number;
-  amenities: Amenity[];
+  conveniences: ConvenienceType[];
   author: User;
   latitude: number;
   longitude: number;
