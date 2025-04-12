@@ -1,20 +1,20 @@
 import { getErrorMessage } from '../../shared/helpers/common.js';
 import {
-  DatabaseClient,
-  MongoDatabaseClient,
+    DatabaseClient,
+    MongoDatabaseClient,
 } from '../../shared/libs/database-client/index.js';
 import { TsvFileReader } from '../../shared/libs/file-reader/index.js';
 import { ConsoleLogger, Logger } from '../../shared/libs/logger/index.js';
 import { OfferTsvParser } from '../../shared/libs/offer-generator/index.js';
 import {
-  DefaultOfferService,
-  OfferModel,
-  OfferService,
+    DefaultOfferService,
+    OfferModel,
+    OfferService,
 } from '../../shared/modules/offer/index.js';
 import {
-  DefaultUserService,
-  UserModel,
-  UserService,
+    DefaultUserService,
+    UserModel,
+    UserService,
 } from '../../shared/modules/user/index.js';
 import { Offer } from '../../shared/types/index.js';
 import { ICommand } from './command.interface.js';
@@ -90,7 +90,7 @@ export class ImportCommand implements ICommand {
       description: offer.description,
       publicationDate: offer.publicationDate,
       city: offer.city,
-      previewImage: offer.previewImage,
+      previewUrl: offer.previewUrl,
       images: offer.images,
       isPremium: offer.isPremium,
       isFavourite: offer.isFavourite,
@@ -98,7 +98,7 @@ export class ImportCommand implements ICommand {
       housingType: offer.housingType,
       rooms: offer.rooms,
       guests: offer.guests,
-      price: offer.price,
+      cost: offer.cost,
       amenities: offer.amenities,
       authorId: user.id,
       latitude: offer.latitude,

@@ -1,17 +1,17 @@
 import dayjs from 'dayjs';
 import {
-  generateRandomBoolean,
-  generateRandomValue,
-  getRandomEnumValue,
-  getRandomEnumValues,
-  getRandomItem,
+    generateRandomBoolean,
+    generateRandomValue,
+    getRandomEnumValue,
+    getRandomEnumValues,
+    getRandomItem,
 } from '../../helpers/index.js';
 import {
-  Amenity,
-  City,
-  HousingType,
-  MockServerData,
-  UserType,
+    Amenity,
+    City,
+    HousingType,
+    MockServerData,
+    UserType,
 } from '../../types/index.js';
 import { OfferTsvParser } from './index.js';
 import { OfferGenerator } from './offer-generator.interface.js';
@@ -57,7 +57,7 @@ export class TsvOfferGenerator implements OfferGenerator {
         .subtract(generateRandomValue(MIN_DAY_OFFSET, MAX_DAY_OFFSET))
         .toDate(),
       city: getRandomEnumValue(City),
-      previewImage: `https://six-cities.ru/images/${offerId}/0`,
+      previewUrl: `https://six-cities.ru/images/${offerId}/0`,
       images: [
         `https://six-cities.ru/images/${offerId}/1`,
         `https://six-cities.ru/images/${offerId}/2`,
@@ -72,7 +72,7 @@ export class TsvOfferGenerator implements OfferGenerator {
       housingType: getRandomEnumValue(HousingType),
       rooms: generateRandomValue(MIN_ROOMS, MAX_ROOMS),
       guests: generateRandomValue(MIN_GUESTS, MAX_GUESTS),
-      price: generateRandomValue(MIN_COST, MAX_COST, 2),
+      cost: generateRandomValue(MIN_COST, MAX_COST, 2),
       amenities: getRandomEnumValues(Amenity),
       author: {
         email: `${author}${generateRandomValue(

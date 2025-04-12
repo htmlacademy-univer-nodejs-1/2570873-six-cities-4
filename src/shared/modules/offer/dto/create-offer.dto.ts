@@ -7,7 +7,7 @@ export class CreateOfferDto {
   public description: string;
   public publicationDate: Date;
   public city: City;
-  public previewImage: string;
+  public previewUrl: string;
   public images: string[];
   public isPremium: boolean;
   public isFavourite: boolean;
@@ -15,7 +15,7 @@ export class CreateOfferDto {
   public housingType: HousingType;
   public rooms: number;
   public guests: number;
-  public price: number;
+  public cost: number;
   public amenities: Amenity[];
   public authorId: Ref<UserEntity>;
   public latitude: number;

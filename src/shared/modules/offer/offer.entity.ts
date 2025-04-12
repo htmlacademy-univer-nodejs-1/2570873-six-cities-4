@@ -32,7 +32,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
     city: City;
 
   @prop({ required: true })
-    previewImage: string;
+    previewUrl: string;
 
   @prop({ required: false })
     images: string[];
@@ -56,7 +56,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
     guests: number;
 
   @prop({ required: true })
-    price: number;
+    cost: number;
 
   @prop({ required: true })
     amenities: Amenity[];

@@ -37,7 +37,7 @@ export class UserEntity extends defaultClasses.TimeStamps {
     super();
 
     this.email = userData.email;
-    this.avatar = userData.avatar;
+    this.avatar = userData.avatarUrl;
     this.name = userData.name;
     this.userType = userData.userType;
   }
