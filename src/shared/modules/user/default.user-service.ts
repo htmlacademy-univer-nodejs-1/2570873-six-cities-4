@@ -1,6 +1,6 @@
 import { DocumentType, types } from '@typegoose/typegoose';
 import { inject, injectable } from 'inversify';
-import { Types } from 'mongoose';
+import { UUID } from 'node:crypto';
 import 'reflect-metadata';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/component.enum.js';
@@ -30,7 +30,7 @@ export class DefaultUserService implements UserService {
   }
 
   public async findById(
-    id: Types.ObjectId
+    id: UUID
   ): Promise<DocumentType<UserEntity> | null> {
     return this.userModel.findById(id);
   }
