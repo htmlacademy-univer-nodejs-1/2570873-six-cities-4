@@ -1,6 +1,6 @@
 import { DocumentType, types } from '@typegoose/typegoose';
 import { inject, injectable } from 'inversify';
-import { UUID } from 'node:crypto';
+import { Types } from 'mongoose';
 import 'reflect-metadata';
 import { Logger } from '../../libs/logger/index.js';
 
@@ -29,7 +29,7 @@ export class DefaultCommentService implements CommentService {
     return result;
   }
 
-  public async findAllForOffer(offerId: UUID, limit: number, skip: number): Promise<DocumentType<CommentEntity>[]> {
+  public async findAllForOffer(offerId: Types.ObjectId, limit: number, skip: number): Promise<DocumentType<CommentEntity>[]> {
     return await this.commentModel.find({offerId: offerId}).skip(skip).limit(limit);
   }
 }

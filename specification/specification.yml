@@ -117,14 +117,14 @@ paths:
           description: Bad Request
       tags:
         - Offers
-  /offers/premium/{cityId}:
+  /offers/premium/{city}:
     get:
       parameters:
-        - name: cityId
+        - name: city
           in: path
           required: true
           schema:
-            type: integer
+            type: string
       responses:
         '200':
           description: OK

@@ -2,14 +2,13 @@ import {
   defaultClasses,
   getModelForClass,
   modelOptions,
-  prop
+  prop, Ref
 } from '@typegoose/typegoose';
-import { UUID } from 'node:crypto';
 import { City, ConvenienceType, HousingType } from '../../types/index.js';
 import { UserEntity } from '../user/user.entity.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export interface OfferEntity extends defaultClasses.Base<UUID> {}
+export interface OfferEntity extends defaultClasses.Base {}
 
 @modelOptions({
   schemaOptions: {
@@ -59,7 +58,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   public conveniences: ConvenienceType[];
 
   @prop({ required: true, ref: UserEntity })
-  public authorId: UUID;
+  public authorId: Ref<UserEntity>;
 
   @prop({ required: true })
   public latitude: number;
@@ -67,11 +66,11 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true })
   public longitude: number;
 
-  @prop({ required: true })
+  @prop({ required: true, default: 0 })
   public commentsNumber: number;
 
   @prop({ required: true })
-  public favouriteUsers: UUID[] = [];
+  public favouriteUsers: Ref<UserEntity>[] = [];
 }
 
 export const OfferModel = getModelForClass(OfferEntity);

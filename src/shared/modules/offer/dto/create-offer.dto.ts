@@ -1,5 +1,6 @@
-import { UUID } from 'node:crypto';
+
 import { City, ConvenienceType, HousingType } from '../../../types/index.js';
+import {Types} from 'mongoose';
 
 export class CreateOfferDto {
   public name: string;
@@ -15,7 +16,7 @@ export class CreateOfferDto {
   public guests: number;
   public cost: number;
   public conveniences: ConvenienceType[];
-  public authorId: UUID;
+  public authorId: Types.ObjectId;
   public latitude: number;
   public longitude: number;
   public commentsNumber: number;
