@@ -92,8 +92,6 @@ export class ImportCommand implements ICommand {
       previewUrl: offer.previewUrl,
       images: offer.images,
       isPremium: offer.isPremium,
-      isFavourite: offer.isFavourite,
-      rating: offer.rating,
       housingType: offer.housingType,
       rooms: offer.rooms,
       guests: offer.guests,
@@ -102,7 +100,6 @@ export class ImportCommand implements ICommand {
       authorId: user.id,
       latitude: offer.latitude,
       longitude: offer.longitude,
-      commentsNumber: offer.commentsNumber,
     });
   }
 }
