@@ -24,24 +24,31 @@ export abstract class BaseController implements Controller {
   }
 
   public addRoute(route: Route) {
+    const middlewareHandlers = route.middlewares?.map(
+      (item) => asyncHandler(item.handleAsync.bind(item))
+    );
     const wrappedHandler = asyncHandler(route.handler.bind(route));
 
-    switch (route.method) {
-      case HttpMethod.Get:
-        this.router.get(route.path, async (res, req, next) => await wrappedHandler(res, req, next));
-        break;
-      case HttpMethod.Post:
-        this.router.post(route.path, async (res, req, next) => await wrappedHandler(res, req, next));
-        break;
-      case HttpMethod.Delete:
-        this.router.delete(route.path, async (res, req, next) => await wrappedHandler(res, req, next));
-        break;
-      case HttpMethod.Put:
-        this.router.put(route.path, async (res, req, next) => await wrappedHandler(res, req, next));
-        break;
-      case HttpMethod.Patch:
-        this.router.patch(route.path, async (res, req, next) => await wrappedHandler(res, req, next));
-        break;
+    const allHandlers = middlewareHandlers ? [...middlewareHandlers, wrappedHandler] : [wrappedHandler];
+
+    for (const handler of allHandlers) {
+      switch (route.method) {
+        case HttpMethod.Get:
+          this.router.get(route.path, async (res, req, next) => await handler(res, req, next));
+          break;
+        case HttpMethod.Post:
+          this.router.post(route.path, async (res, req, next) => await handler(res, req, next));
+          break;
+        case HttpMethod.Delete:
+          this.router.delete(route.path, async (res, req, next) => await handler(res, req, next));
+          break;
+        case HttpMethod.Put:
+          this.router.put(route.path, async (res, req, next) => await handler(res, req, next));
+          break;
+        case HttpMethod.Patch:
+          this.router.patch(route.path, async (res, req, next) => await handler(res, req, next));
+          break;
+      }
     }
 
     this.logger.info(`Registered route: ${route.method} ${route.path}`);
