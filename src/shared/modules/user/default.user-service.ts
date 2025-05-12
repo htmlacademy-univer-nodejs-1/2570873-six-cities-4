@@ -1,6 +1,6 @@
 import { DocumentType, types } from '@typegoose/typegoose';
 import { inject, injectable } from 'inversify';
-import { ObjectId } from 'mongoose';
+import { ObjectId, Types } from 'mongoose';
 import 'reflect-metadata';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/component.enum.js';
@@ -15,6 +15,11 @@ export class DefaultUserService implements UserService {
     @inject(Component.UserModel)
     private readonly userModel: types.ModelType<UserEntity>
   ) {}
+
+  public async checkIdExists(id: Types.ObjectId): Promise<boolean> {
+    const result = await this.userModel.findById(id);
+    return Boolean(result);
+  }
 
   public async create(
     dto: CreateUserDto,
