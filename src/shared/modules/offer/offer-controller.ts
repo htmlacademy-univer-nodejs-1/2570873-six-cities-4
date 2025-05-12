@@ -25,14 +25,14 @@ export class OfferController extends BaseController {
     this.addRoute({path: '/premium/:city', method: HttpMethod.Delete, handler: this.indexPremiumForCity.bind(this)});
 
     this.addRoute({path: '/favourite', method: HttpMethod.Get, handler: this.indexFavouriteForUser.bind(this)});
-    this.addRoute({path: '/favourite/:id', method: HttpMethod.Post, handler: this.addToFavourite.bind(this), middlewares: [new ObjectIdValidatorMiddleware('id')]});
-    this.addRoute({path: '/favourite/:id', method: HttpMethod.Delete, handler: this.removeFromFavourite.bind(this), middlewares: [new ObjectIdValidatorMiddleware('id')]});
+    this.addRoute({path: '/favourite/:id', method: HttpMethod.Post, handler: this.addToFavourite.bind(this), middlewares: [new ObjectIdValidatorMiddleware(this.offerService, 'id')]});
+    this.addRoute({path: '/favourite/:id', method: HttpMethod.Delete, handler: this.removeFromFavourite.bind(this), middlewares: [new ObjectIdValidatorMiddleware(this.offerService, 'id')]});
 
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index.bind(this)});
     this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create.bind(this), middlewares: [new SchemaValidatorMiddleware(createOfferDtoSchema)]});
-    this.addRoute({path: '/:id', method: HttpMethod.Get, handler: this.showById.bind(this), middlewares: [new ObjectIdValidatorMiddleware('id')]});
-    this.addRoute({path: '/:id', method: HttpMethod.Put, handler: this.updateById.bind(this), middlewares: [new ObjectIdValidatorMiddleware('id'), new SchemaValidatorMiddleware(putOfferDtoSchema)]});
-    this.addRoute({path: '/:id', method: HttpMethod.Delete, handler: this.deleteById.bind(this), middlewares: [new ObjectIdValidatorMiddleware('id')]});
+    this.addRoute({path: '/:id', method: HttpMethod.Get, handler: this.showById.bind(this), middlewares: [new ObjectIdValidatorMiddleware(this.offerService, 'id')]});
+    this.addRoute({path: '/:id', method: HttpMethod.Put, handler: this.updateById.bind(this), middlewares: [new ObjectIdValidatorMiddleware(this.offerService, 'id'), new SchemaValidatorMiddleware(putOfferDtoSchema)]});
+    this.addRoute({path: '/:id', method: HttpMethod.Delete, handler: this.deleteById.bind(this), middlewares: [new ObjectIdValidatorMiddleware(this.offerService, 'id')]});
   }
 
   private async index(req: Request, res: Response): Promise<void> {
