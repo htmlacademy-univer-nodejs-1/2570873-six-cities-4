@@ -7,6 +7,7 @@ import { Component } from '../../types/component.enum.js';
 import { CreateUserDto } from './dto/create-user.dto.js';
 import { UserService } from './user-service.interface.js';
 import { UserEntity } from './user.entity.js';
+import {createSHA256} from '../../helpers/index.js';
 
 @injectable()
 export class DefaultUserService implements UserService {
@@ -57,5 +58,26 @@ export class DefaultUserService implements UserService {
     }
 
     return this.create(dto, salt);
+  }
+
+  public async checkPassword(email: string, password: string, salt: string): Promise<DocumentType<UserEntity> | null> {
+    const user = await this.findByEmail(email);
+
+    if (!user) {
+      return null;
+    }
+
+    const currentHash = createSHA256(password, salt);
+    const hashFromDb = user.getPassword();
+
+    if (currentHash !== hashFromDb) {
+      return null;
+    }
+
+    return user;
+  }
+
+  public async updateAvatar(id: ObjectId, avatarPath: string): Promise<void> {
+    await this.userModel.updateOne({ id: id }, { avatarUrl: avatarPath });
   }
 }
