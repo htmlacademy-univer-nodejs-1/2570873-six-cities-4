@@ -5,7 +5,7 @@ import 'reflect-metadata';
 import { Logger } from '../../libs/logger/index.js';
 
 import { Component } from '../../types/index.js';
-import { OfferEntity } from '../offer/offer.entity.js';
+import { OfferEntity } from '../offer/index.js';
 import { CommentService } from './comment-service.interface.js';
 import { CommentEntity } from './comment.entity.js';
 import { CreateCommentDto } from './dto/create-comment.dto.js';
@@ -26,15 +26,15 @@ export class DefaultCommentService implements CommentService {
   public async create(dto: CreateCommentDto): Promise<DocumentType<CommentEntity>> {
     const result = await this.commentModel.create(dto);
 
-    const aggregation = await this.commentModel.aggregate([{'$match': {offerId: dto.offerId}}, {'$group': {_id: null, count: {'$sum': 1}, average: {'$avg': '$rating'}}}]).exec();
-    this.offerModel.findByIdAndUpdate(dto.offerId, {commentsNumber: aggregation[0].count, rating: aggregation[0].average});
+    const aggregation = await this.commentModel.aggregate([{'$match': {offerId: String(dto.offerId)}}, {'$group': {_id: null, count: {'$sum': 1}, average: {'$avg': '$rating'}}}]).exec();
+    await this.offerModel.findByIdAndUpdate(dto.offerId, {commentsNumber: aggregation[0].count, rating: aggregation[0].average}).exec();
 
     this.logger.info(`New comment created: ${result._id}`);
 
     return result;
   }
 
-  public async findAllForOffer(offerId: Types.ObjectId, limit: number, skip: number): Promise<DocumentType<CommentEntity>[]> {
-    return await this.commentModel.find({offerId: offerId}).skip(skip).limit(limit);
+  public async findAllForOffer(offerId: string, limit: number, skip: number): Promise<DocumentType<CommentEntity>[]> {
+    return await this.commentModel.find({offerId: {$eq: offerId}}).skip(skip).limit(limit).exec();
   }
 }

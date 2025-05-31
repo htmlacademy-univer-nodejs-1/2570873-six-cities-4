@@ -6,6 +6,7 @@ import { Logger } from '../shared/libs/logger/index.js';
 import { Component } from '../shared/types/index.js';
 import {getMongoURI} from '../shared/helpers/index.js';
 import {Controller, ExceptionFilter} from '../shared/libs/rest/index.js';
+import cors from 'cors';
 
 @injectable()
 export class RestApplication {
@@ -48,6 +49,12 @@ export class RestApplication {
 
   private async _initMiddleware() {
     this.server.use(express.json());
+    this.server.use(express.static(this.config.get('STATIC_ROOT')));
+    this.server.use(cors());
+    this.server.use((req, _res, next) => {
+      this.logger.info(`Catch request: ${req.method} ${req.url}`);
+      next();
+    });
   }
 
   private async _initExceptionFilters() {
