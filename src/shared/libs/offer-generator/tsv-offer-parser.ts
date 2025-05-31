@@ -3,7 +3,6 @@ import {
   ConvenienceType,
   HousingType,
   Offer,
-  UserType,
 } from '../../types/index.js';
 
 export class OfferTsvParser {
@@ -18,9 +17,10 @@ export class OfferTsvParser {
 
     const splitString = trimString.split('\t');
     const [
+      id,
       name,
       description,
-      publicationDate,
+      createdAt,
       city,
       previewUrl,
       images,
@@ -33,15 +33,15 @@ export class OfferTsvParser {
       cost,
       conveniences,
       author,
-      authorEmail,
       latitude,
       longitude,
     ] = splitString;
 
     return {
+      id,
       name,
       description,
-      publicationDate: new Date(publicationDate),
+      createdAt: new Date(createdAt),
       city: city as City,
       previewUrl,
       images: images.split(';'),
@@ -55,12 +55,7 @@ export class OfferTsvParser {
       conveniences: conveniences
         .split(';')
         .map((convenience) => convenience as ConvenienceType),
-      author: {
-        email: authorEmail,
-        name: author,
-        userType: UserType.Basic,
-        avatarUrl: `http://localhost:1111/${author}`,
-      },
+      author: author,
       latitude: Number(latitude),
       longitude: Number(longitude),
       commentsNumber: 0,
@@ -69,9 +64,10 @@ export class OfferTsvParser {
 
   toString(offer: Offer): string {
     return [
+      offer.id,
       offer.name,
       offer.description,
-      offer.publicationDate,
+      offer.createdAt,
       offer.city,
       offer.previewUrl,
       offer.images.join(';'),
@@ -83,8 +79,7 @@ export class OfferTsvParser {
       offer.guests,
       offer.cost,
       offer.conveniences.join(';'),
-      offer.author.name,
-      offer.author.email,
+      offer.author,
       offer.latitude,
       offer.longitude,
     ].join('\t');

@@ -1,5 +1,3 @@
-import { User } from './index.js';
-
 export enum City {
   Paris = 'Paris',
   Cologne = 'Colonge',
@@ -32,9 +30,10 @@ export enum ConvenienceType {
 }
 
 export type Offer = {
+  id: string;
   name: string;
   description: string;
-  publicationDate: Date;
+  createdAt: Date;
   city: City;
   previewUrl: string;
   images: string[];
@@ -46,7 +45,7 @@ export type Offer = {
   guests: number;
   cost: number;
   conveniences: ConvenienceType[];
-  author: User;
+  author: string;
   latitude: number;
   longitude: number;
   commentsNumber: number;

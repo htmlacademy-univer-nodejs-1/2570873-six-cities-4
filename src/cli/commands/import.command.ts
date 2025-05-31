@@ -11,29 +11,22 @@ import {
   OfferModel,
   OfferService,
 } from '../../shared/modules/offer/index.js';
-import {
-  DefaultUserService,
-  UserModel,
-  UserService,
-} from '../../shared/modules/user/index.js';
 import { Offer } from '../../shared/types/index.js';
 import { ICommand } from './command.interface.js';
+import {CommentModel} from '../../shared/modules/comment/index.js';
 
 export class ImportCommand implements ICommand {
   private readonly parser: OfferTsvParser = new OfferTsvParser();
-  private readonly userService: UserService;
   private readonly offerService: OfferService;
   private readonly databaseClient: DatabaseClient;
   private readonly logger: Logger;
-  private salt: string;
 
   constructor() {
     this.onImportedLine = this.onImportedLine.bind(this);
     this.onCompleteImport = this.onCompleteImport.bind(this);
 
     this.logger = new ConsoleLogger();
-    this.offerService = new DefaultOfferService(this.logger, OfferModel);
-    this.userService = new DefaultUserService(this.logger, UserModel);
+    this.offerService = new DefaultOfferService(this.logger, OfferModel, CommentModel);
     this.databaseClient = new MongoDatabaseClient(this.logger);
   }
 
@@ -43,10 +36,8 @@ export class ImportCommand implements ICommand {
 
   public async execute(
     filename: string,
-    databaseConnectionUri: string,
-    salt: string
+    databaseConnectionUri: string
   ): Promise<void> {
-    this.salt = salt;
 
     await this.databaseClient.connect(databaseConnectionUri);
     const reader = new TsvFileReader(filename.trim());
@@ -77,13 +68,6 @@ export class ImportCommand implements ICommand {
   }
 
   private async saveOffer(offer: Offer) {
-    const user = await this.userService.findOrCreate(
-      {
-        ...offer.author,
-        password: '123456',
-      },
-      this.salt
-    );
 
     await this.offerService.create({
       name: offer.name,
@@ -97,7 +81,7 @@ export class ImportCommand implements ICommand {
       guests: offer.guests,
       cost: offer.cost,
       conveniences: offer.conveniences,
-      authorId: user.id,
+      authorId: offer.author,
       latitude: offer.latitude,
       longitude: offer.longitude,
     });

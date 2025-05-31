@@ -10,11 +10,11 @@ import { CreateUserDto } from './dto/create-user.dto.js';
 import { RestSchema, Config } from '../../libs/config/index.js';
 import { SchemaValidatorMiddleware } from '../../libs/rest/middleware/schema-validator.middleware.js';
 import { createUserDtoSchema } from './dto-schemas/create-user-dto.schema.js';
-import { ObjectIdValidatorMiddleware } from '../../libs/rest/middleware/object-id-validator.middleware.js';
 import {UploadFileMiddleware} from '../../libs/rest/middleware/upload-file.middleware.js';
 import {StatusCodes} from 'http-status-codes';
 import {LoginDto} from './dto/login.dto.js';
 import {getToken} from '../../helpers/jwt-tokens.js';
+import {toFullModel} from './converters.js';
 
 @injectable()
 export class UserController extends BaseController {
@@ -27,17 +27,28 @@ export class UserController extends BaseController {
 
     this.addRoute({path: '/register', method: HttpMethod.Post, handler: this.register.bind(this), middlewares: [new SchemaValidatorMiddleware(createUserDtoSchema)]});
     this.addRoute({path: '/login', method: HttpMethod.Post, handler: this.login.bind(this), middlewares: [new SchemaValidatorMiddleware(createUserDtoSchema)]});
-    this.addRoute({path: '/:id/avatar', method: HttpMethod.Post, handler: this.loadAvatar.bind(this), middlewares: [new ObjectIdValidatorMiddleware(this.userService, 'id'), new AuthorizeMiddleware(this.config.get('JWT_SECRET')), new UploadFileMiddleware(this.config.get('DB_HOST'), 'avatar')]
+    this.addRoute({
+      path: '/me',
+      method: HttpMethod.Get,
+      handler: this.me.bind(this),
+      middlewares: [
+        new AuthorizeMiddleware(this.config.get('JWT_SECRET'))
+      ]
+    });
+    this.addRoute({
+      path: '/me/avatar',
+      method: HttpMethod.Post,
+      handler: this.loadAvatar.bind(this),
+      middlewares: [
+
+        new AuthorizeMiddleware(this.config.get('JWT_SECRET')),
+        new UploadFileMiddleware(this.config.get('STATIC_ROOT'), 'avatar')
+      ]
     });
   }
 
   private async loadAvatar(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
-    const { id } = req.params;
-
-    if (userId !== id) {
-      throw new HttpError(StatusCodes.FORBIDDEN, 'No access to user');
-    }
 
     const filepath = req.file?.path;
     if (!filepath) {
@@ -56,7 +67,7 @@ export class UserController extends BaseController {
       dto.avatar = avatarPath;
     }
     const user = await this.userService.create(dto, this.config.get('SALT'));
-    this.created(res, user);
+    this.created(res, this.created(res, toFullModel(user)));
   }
 
   private async login(req: Request, res: Response): Promise<void> {
@@ -69,5 +80,18 @@ export class UserController extends BaseController {
 
     const accessToken = await getToken({ userId: user.id }, this.config.get('JWT_SECRET'));
     this.ok(res, { accessToken });
+  }
+
+  private async me(_req: Request, res: Response): Promise<void> {
+    const { userId } = res.locals;
+
+    const user = await this.userService.findById(userId);
+
+    if (user === null) {
+      this.send(res, StatusCodes.UNAUTHORIZED, null);
+      return;
+    }
+
+    this.ok(res, toFullModel(user));
   }
 }
